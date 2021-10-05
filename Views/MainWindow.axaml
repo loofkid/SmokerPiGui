@@ -1,0 +1,509 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SmokerPiGui.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SmokerPiGui;assembly=SmokerPiGui"
+        xmlns:converters="clr-namespace:SmokerPiGui.Converters;assembly=SmokerPiGui"
+        xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+        x:Class="SmokerPiGui.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SmokerPi"
+        Height="480" Width="800"
+
+
+        WindowState="FullScreen"
+        CanResize="False">
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <Window.Resources>
+        <converters:PercentConverter x:Key="PercentConverter" />
+        <converters:AddConverter x:Key="AddConverter" />
+    </Window.Resources>
+    <Panel>
+        <Panel.Styles>
+            <Style Selector="Border#NumberPanelBorder.Closed">
+                <Setter Property="RenderTransform" Value="translateY(450px)" />
+            </Style>
+            <Style Selector="Border#NumberPanelBorder.Opened">
+                <Setter Property="RenderTransform" Value="translateY(0)" />
+            </Style>
+            <Style Selector="Panel#SettingsPanel.Closed">
+                <Setter Property="RenderTransform" Value="translateX(-800px)" />
+            </Style>
+            <Style Selector="Panel#SettingsPanel.Opened">
+                <Setter Property="RenderTransform" Value="translateX(0)" />
+            </Style>
+        </Panel.Styles>
+        <Button VerticalAlignment="Top" HorizontalAlignment="Left"
+            VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+            Height="50" Width="50"
+            ZIndex="20"
+            Command="{Binding SettingsButton}"
+            i:Attached.Icon="fas fa-bars" />
+        <DockPanel Name="MainPanel">
+            <Grid Background="Black">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Grid.ColumnSpan="2" BorderBrush="#575757" BorderThickness="0,0,1,0" ZIndex="0" />
+                <Border Grid.Row="2" Grid.ColumnSpan="3" BorderBrush="#575757" BorderThickness="0,1,1,0" ZIndex="0" />
+                <Border Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" BorderBrush="#575757" BorderThickness="1,1,0,0" ZIndex="0" />
+                <RelativePanel Grid.ColumnSpan="2">
+                    <RelativePanel.Styles>
+                        <Style Selector="i|Icon.Cooking">
+                            <Style.Animations>
+                                <Animation Duration="0:0:2" RepeatCount="INFINITE" Easing="CubicEaseInOut">
+                                    <KeyFrame Cue="0%">
+                                        <Setter Property="Foreground" Value="#ffffff" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="33%">
+                                        <Setter Property="Foreground" Value="#ff8c00" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="66%">
+                                        <Setter Property="Foreground" Value="#ff8c00" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="100%">
+                                        <Setter Property="Foreground" Value="#ffffff" />
+                                    </KeyFrame>
+                                </Animation>
+                            </Style.Animations>
+                        </Style>
+                        <Style Selector="TextBlock.Cooking">
+                            <Setter Property="Foreground" Value="#ffffff" />
+                            <Style.Animations>
+                                <Animation Duration="0:0:2" RepeatCount="INFINITE" Easing="CubicEaseInOut">
+                                    <KeyFrame Cue="0%">
+                                        <Setter Property="Foreground" Value="#ffffff" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="33%">
+                                        <Setter Property="Foreground" Value="#ff8c00" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="66%">
+                                        <Setter Property="Foreground" Value="#ff8c00" />
+                                    </KeyFrame>
+                                    <KeyFrame Cue="100%">
+                                        <Setter Property="Foreground" Value="#ffffff" />
+                                    </KeyFrame>
+                                </Animation>
+                            </Style.Animations>
+                        </Style>
+                        
+                    </RelativePanel.Styles>
+                    <i:Icon FontSize="150" Name="flame" Value="fas fa-fire" Height="150"
+                        Classes.Cooking="{Binding Cooking}"
+                        RelativePanel.AlignHorizontalCenterWithPanel="True"
+                        RelativePanel.AlignVerticalCenterWithPanel="True" />
+                    <TextBlock Foreground="White" FontSize="25" Text="{Binding CookingText}"
+                        Classes.Cooking="{Binding Cooking}"
+                        RelativePanel.Below="flame"
+                        RelativePanel.AlignHorizontalCenterWith="flame" />
+                    <Ellipse
+                        Name="HeatingPixel"
+                        Height="5"
+                        Width="5"
+                        Margin="20"
+                        RelativePanel.AlignBottomWithPanel="True"
+                        RelativePanel.AlignRightWithPanel="True"
+                        Classes.Heating="{Binding Heating}">
+                        <Ellipse.Styles>
+                            <Style Selector="Ellipse">
+                                <Setter Property="Fill" Value="White" />
+                            </Style>
+                            <Style Selector="Ellipse.Heating">
+                                <!-- <Setter Property="Fill" Value="Red" /> -->
+                                <Style.Animations>
+                                    <Animation Duration="0:0:0.5" Easing="CubicEaseInOut">
+                                        <KeyFrame Cue="0%">
+                                            <Setter Property="Fill" Value="White" />
+                                        </KeyFrame>
+                                        <KeyFrame Cue="100%">
+                                            <Setter Property="Fill" Value="Red" />
+                                        </KeyFrame>
+                                    </Animation>
+                                </Style.Animations>
+                            </Style>
+                        </Ellipse.Styles>
+                    </Ellipse>
+                </RelativePanel>
+                <Grid Grid.Column="2" Grid.ColumnSpan="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="#575757" BorderThickness="0,0,1,0" ZIndex="1" />
+                    <Border BorderBrush="#575757" BorderThickness="0,1,1,0" ZIndex="1" Grid.Row="2" />
+                    <Border BorderBrush="#575757" BorderThickness="0,1,0,0" ZIndex="1" Grid.Column="2" Grid.Row="2" />
+                    <Button Command="{Binding Probe1Pressed}" Background="Transparent">
+                        <RelativePanel>
+                            <TextBlock Name="Probe1Label" Foreground="White" Margin="20" FontSize="25" Text="{Binding Probe1Label}"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignTopWithPanel="True" />
+                            <TextBlock Name="Probe1ReadoutText" Foreground="White" FontSize="50" Text="{Binding Probe1Readout, StringFormat=\{0:F0\}}" 
+                                RelativePanel.AlignHorizontalCenterWith="Probe1Label"
+                                RelativePanel.Below="Probe1Label" />
+                            <TextBlock Name="Probe1TargetText" Foreground="White" FontSize="15" Text="{Binding Probe1Target, StringFormat=\{0:F0\}}"
+                                RelativePanel.AlignHorizontalCenterWith="Probe1ReadoutText"
+                                RelativePanel.Below="Probe1ReadoutText" />
+                        </RelativePanel>
+                    </Button>
+                    <Button Command="{Binding Probe2Pressed}" Background="Transparent" Grid.Column="2">
+                        <RelativePanel>
+                            <TextBlock Name="Probe2Label" Foreground="White" Margin="20" FontSize="25" Text="{Binding Probe2Label}"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignTopWithPanel="True" />
+                            <TextBlock Name="Probe2ReadoutText" Foreground="White" FontSize="50" Text="{Binding Probe2Readout, StringFormat=\{0:F0\}}" 
+                                RelativePanel.AlignHorizontalCenterWith="Probe2Label"
+                                RelativePanel.Below="Probe2Label" />
+                            <TextBlock Name="Probe2TargetText" Foreground="White" FontSize="15" Text="{Binding Probe2Target, StringFormat=\{0:F0\}}"
+                                RelativePanel.AlignHorizontalCenterWith="Probe2ReadoutText"
+                                RelativePanel.Below="Probe2ReadoutText" />
+                        </RelativePanel>
+                    </Button>
+                    <Button Command="{Binding Probe3Pressed}" Background="Transparent" Grid.Row="2">
+                        <RelativePanel>
+                            <TextBlock Name="Probe3Label" Foreground="White" Margin="20" FontSize="25" Text="{Binding Probe3Label}" 
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignTopWithPanel="True" />
+                            <TextBlock Name="Probe3ReadoutText" Foreground="White" FontSize="50" Text="{Binding Probe3Readout, StringFormat=\{0:F0\}}"
+                                RelativePanel.AlignHorizontalCenterWith="Probe3Label"
+                                RelativePanel.Below="Probe3Label" />
+                            <TextBlock Name="Probe3TargetText" Foreground="White" FontSize="15" Text="{Binding Probe3Target, StringFormat=\{0:F0\}}" 
+                                RelativePanel.AlignHorizontalCenterWith="Probe3ReadoutText"
+                                RelativePanel.Below="Probe3ReadoutText" />
+                        </RelativePanel>
+                    </Button>
+                    <Button Command="{Binding Probe4Pressed}" Background="Transparent" Grid.Column="2" Grid.Row="2">
+                        <RelativePanel>
+                            <TextBlock Name="Probe4Label" Foreground="White" Margin="20" FontSize="25" Text="{Binding Probe4Label}" 
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignTopWithPanel="True" />
+                            <TextBlock Name="Probe4ReadoutText" Foreground="White" FontSize="50" Text="{Binding Probe4Readout, StringFormat=\{0:F0\}}"
+                                RelativePanel.AlignHorizontalCenterWith="Probe4Label"
+                                RelativePanel.Below="Probe4Label" />
+                            <TextBlock Name="Probe4TargetText" Foreground="White" FontSize="15" Text="{Binding Probe4Target, StringFormat=\{0:F0\}}" 
+                                RelativePanel.AlignHorizontalCenterWith="Probe4ReadoutText"
+                                RelativePanel.Below="Probe4ReadoutText" />
+                        </RelativePanel>
+                    </Button>
+                </Grid>
+                <Panel Grid.Row="2" Grid.ColumnSpan="3">
+                    <RelativePanel VerticalAlignment="Center">
+                        <TextBlock Name="ChamberTempLabel"
+                            Foreground="White" FontSize="15" Text="Chamber Temperature" 
+                            RelativePanel.AlignHorizontalCenterWithPanel="True"  />
+                        <TextBlock Foreground="White" FontSize="20" Text="{Binding ChamberTemp, StringFormat=\{0:F0\}}"
+                            RelativePanel.AlignHorizontalCenterWith="ChamberTempLabel"
+                            RelativePanel.Below="ChamberTempLabel" />
+                    </RelativePanel>
+                </Panel>
+                <Button Command="{Binding TargetTempPressed}" Background="Transparent" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="3" VerticalAlignment="Stretch">
+                    <RelativePanel VerticalAlignment="Center">
+                        <TextBlock Name="TargetTempLabel"
+                            Foreground="White" FontSize="15" Text="Target Temperature" 
+                            VerticalAlignment="Stretch"
+                            RelativePanel.AlignHorizontalCenterWithPanel="True" />
+                        <TextBlock Foreground="White" FontSize="20" Text="{Binding TargetTemp, StringFormat=\{0:F0\}}"
+                            VerticalAlignment="Stretch"
+                            RelativePanel.AlignHorizontalCenterWith="TargetTempLabel"
+                            RelativePanel.Below="TargetTempLabel" />
+                    </RelativePanel>
+                </Button>
+            </Grid>
+        </DockPanel>
+        <DockPanel
+            ZIndex="50">
+            <Panel Background="Black" 
+                Opacity="0.5" 
+                IsVisible="{Binding DialogBackgroundVisible}" 
+                Height="{Binding $parent[Window].Bounds.Height}"
+                Width="{Binding $parent[Window].Bounds.Width}" />
+        </DockPanel>
+        <Border
+            Name="NumberPanelBorder"
+            BoxShadow="0 -3 9 1 #000000C2"
+            ZIndex="2000"
+            Classes.Closed="{Binding NumpadClosed}"
+            Classes.Opened="{Binding !NumpadClosed}">
+            <!-- <Border.RenderTransform>
+                <TranslateTransform Y="{Binding NumpadTransform}" />
+            </Border.RenderTransform> -->
+            <Border.Transitions>
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.250" Easing="CubicEaseInOut"/>
+                </Transitions>
+            </Border.Transitions>
+            <RelativePanel Name="NumberPanel" 
+                Height="{Binding $parent[Window].Bounds.Height, Converter={StaticResource PercentConverter}, ConverterParameter='0.85'}" 
+                Width="{Binding $parent[Window].Bounds.Width, Converter={StaticResource PercentConverter}, ConverterParameter='0.5'}" 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom" 
+                Background="#363636"
+                >
+                <TextBlock
+                    Name="NumberPanelTitle"
+                    Text="{Binding NumberPanelTitle}"
+                    Margin="0,20,0,0"
+                    RelativePanel.AlignTopWithPanel="True"
+                    RelativePanel.AlignHorizontalCenterWithPanel="True" />
+                <StackPanel
+                    Name="NumberInput"
+                    Orientation="Horizontal"
+                    Width="{Binding $parent[RelativePanel].Bounds.Width, Converter={StaticResource PercentConverter}, ConverterParameter='0.90'}"
+                    RelativePanel.Below="NumberPanelTitle"
+                    RelativePanel.AlignHorizontalCenterWith="NumberPanelTitle">
+                    <NumericUpDown 
+                        Value="{Binding NumberPanelValue, Mode=TwoWay}" 
+                        Margin="0,20,0,20"
+                        Minimum="0.0" 
+                        Maximum="275.0" 
+                        Increment="1"
+                        FontSize="40"
+                        Height="40"
+                        Width="{Binding $parent[StackPanel].Bounds.Width, Converter={StaticResource AddConverter}, ConverterParameter='-45.0'}"
+                        ButtonSpinnerLocation="Left"
+                        HorizontalAlignment="Stretch"
+                        VerticalContentAlignment="Center"
+                        HorizontalContentAlignment="Right"/>
+                    <RepeatButton
+                        Command="{Binding BackspaceButton}"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Margin="5,0,0,0"
+                        Height="40"
+                        Width="40"
+                        i:Attached.Icon="fas fa-backspace" />
+                </StackPanel>
+                <Grid
+                    RelativePanel.Below="NumberInput"
+                    RelativePanel.AlignHorizontalCenterWith="NumberInput"
+                    Width="{Binding #NumberInput.Bounds.Width}"
+                    Height="310"
+                    ZIndex="5000" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Margin" Value="2" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="VerticalAlignment" Value="Stretch" />
+                        </Style>
+                    </Grid.Styles>
+                    <Button 
+                        Command="{Binding Preset1Button}" 
+                        Content="{Binding Preset1Label}" 
+                        Grid.ColumnSpan="3" />
+                    <Button 
+                        Command="{Binding Preset2Button}" 
+                        Content="{Binding Preset2Label}" 
+                        Grid.ColumnSpan="3"
+                        Grid.Column="3" />
+                    <Button 
+                        Command="{Binding OneButton}" 
+                        Content="1" 
+                        Grid.ColumnSpan="2"
+                        Grid.Row="1" />
+                    <Button 
+                        Command="{Binding TwoButton}" 
+                        Content="2" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="2"
+                        Grid.Row="1" />
+                    <Button 
+                        Command="{Binding ThreeButton}" 
+                        Content="3" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="4"
+                        Grid.Row="1" />
+                    <Button 
+                        Command="{Binding FourButton}" 
+                        Content="4" 
+                        Grid.ColumnSpan="2"
+                        Grid.Row="2" />
+                    <Button 
+                        Command="{Binding FiveButton}" 
+                        Content="5" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="2"
+                        Grid.Row="2" />
+                    <Button 
+                        Command="{Binding SixButton}" 
+                        Content="6" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="4"
+                        Grid.Row="2" />
+                    <Button 
+                        Command="{Binding SevenButton}" 
+                        Content="7" 
+                        Grid.ColumnSpan="2"
+                        Grid.Row="3" />
+                    <Button 
+                        Command="{Binding EightButton}" 
+                        Content="8" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="2"
+                        Grid.Row="3" />
+                    <Button 
+                        Command="{Binding NineButton}" 
+                        Content="9" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="4"
+                        Grid.Row="3" />
+                    <Button
+                        Command="{Binding CancelButton}"
+                        Content="Cancel"
+                        Grid.ColumnSpan="2"
+                        Grid.Row="4" />
+                    <Button 
+                        Command="{Binding ZeroButton}" 
+                        Content="0"
+                        Grid.ColumnSpan="2"
+                        Grid.Column="2"
+                        Grid.Row="4" />
+                    <Button 
+                        Command="{Binding SaveButton}" 
+                        Content="Save" 
+                        Grid.ColumnSpan="2"
+                        Grid.Column="4"
+                        Grid.Row="4" />
+                </Grid>
+            </RelativePanel>
+        </Border>
+        <Panel
+            Name="SettingsPanel"
+            Classes.Closed="{Binding SettingsClosed}"
+            Classes.Opened="{Binding !SettingsClosed}"
+            ZIndex="2000"
+            Height="{Binding !parent[Window].Bounds.Height}"
+            Width="{Binding !parent[Window].Bounds.Width}"
+            Background="#363636">
+            <Panel.Transitions>
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.250" Easing="CubicEaseInOut"/>
+                </Transitions>
+            </Panel.Transitions>
+            
+            <SplitView IsPaneOpen="True"
+                DisplayMode="Inline"
+                OpenPaneLength="250">
+                <SplitView.Pane>
+                    <ScrollViewer
+                        Background="#1f1f1f"
+                        ZIndex="2020">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel.Styles>
+                                <Style Selector="Button">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Height" Value="75" />
+                                    <Setter Property="Width" Value="250" />
+                                    <Setter Property="Background" Value="#2b2b2b" />
+                                </Style>
+                                <Style Selector="Button > StackPanel">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                                    <Setter Property="Orientation" Value="Horizontal" />
+                                </Style>
+                                <Style Selector="Button > StackPanel > TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="FontSize" Value="20" />
+                                    <Setter Property="Margin" Value="5,0,5,0" />
+                                </Style>
+                                <Style Selector="Button > StackPanel > i|Icon">
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="FontSize" Value="20" />
+                                    <Setter Property="Height" Value="20" />
+                                    <Setter Property="Width" Value="20" />
+                                    <Setter Property="Margin" Value="5,0,5,0" />
+                                </Style>
+                                <Style Selector="Button.Active">
+                                    <Setter Property="Background" Value="#575757" />
+                                    <Setter Property="Focusable" Value="False" />
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </Style>
+                                <Style Selector="Button.Active:disabled">
+                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                </Style>
+                                <Style Selector="Button.Active > StackPanel:disabled > TextBlock:disabled">
+                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                </Style>
+                                <Style Selector="Button.Active > StackPanel:disabled > i|Icon:disabled">
+                                    <Setter Property="Foreground" Value="#FFFFFF" />
+                                </Style>
+                            </StackPanel.Styles>
+                            <Button Classes.Active="{Binding OnInfo}"
+                                Command="{Binding GoToInfo}">
+                                <StackPanel>
+                                    <i:Icon Name="InfoIcon"
+                                        Value="fas fa-info-circle" />
+                                    <TextBlock Text="Info" />
+                                </StackPanel>
+                            </Button>
+                            <Button Classes.Active="{Binding OnSettings}"
+                                Command="{Binding GoToSettings}">
+                                <StackPanel>
+                                    <i:Icon Name="SettingsIcon"
+                                        Value="fas fa-cog" />
+                                    <TextBlock Text="Settings" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+                </SplitView.Pane>
+                <ScrollViewer>
+                    <Panel>
+                        <StackPanel IsVisible="{Binding OnInfo}" Orientation="Vertical" Margin="15">
+                            <TextBlock FontSize="15" Text="IP Address" />
+                            <TextBlock FontSize="20" Text="{Binding IPAddress}" />
+                            <Panel Height="15" />
+                            <TextBlock FontSize="15" Text="Host Name" />
+                            <TextBlock FontSize="20" Text="{Binding HostName}" />
+                            <Button Click="CloseWindow" Content="Close Application" />
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding OnSettings}" Orientation="Vertical" Margin="15">
+                            <TextBlock FontSize="15" Text="Probe 1 Name" />
+                        </StackPanel>
+                    </Panel>
+                </ScrollViewer>
+            </SplitView>
+            <Button Name="SettingsCloseButton"
+                Command="{Binding SettingsCloseButton}"
+                i:Attached.Icon="fas fa-times"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Stretch"
+                HorizontalAlignment="Right"
+                HorizontalContentAlignment="Stretch"
+                Height="50" Width="50" />
+        </Panel>
+    </Panel>
+</Window>

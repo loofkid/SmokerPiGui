@@ -1,0 +1,24 @@
+{
+  "name": "smokerpi",
+  "version": "0.0.1",
+  "description": "Smoker Controller Based on Raspberry Pi single board architecture",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loofkid/SmokerPi.git"
+  },
+  "keywords": [
+    "smoker",
+    "pi",
+    "rasberry"
+  ],
+  "author": "Kent Loofbourrow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/loofkid/SmokerPi/issues"
+  },
+  "homepage": "https://github.com/loofkid/SmokerPi#readme"
+}
