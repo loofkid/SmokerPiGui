@@ -23,8 +23,10 @@ namespace SmokerPiGui.Web.BackgroundServices
             _probeService = probeService;
             _logger = logger;
             _statusService = statusService;
+            #if !DEBUG
             _gpioController = new (PinNumberingScheme.Board);
             _gpioController.OpenPin(heatPin, PinMode.Output);
+            #endif
         }
 
         private void ControlHeating()
@@ -33,7 +35,9 @@ namespace SmokerPiGui.Web.BackgroundServices
             {
                 heatingStatus = true;
                 _statusService.Heating = true;
+                #if !DEBUG
                 _gpioController.Write(heatPin, PinValue.High);
+                #endif
                 _logger.LogInformation($"Heating.");
                 Console.WriteLine($"Heating.");
             }
@@ -42,7 +46,9 @@ namespace SmokerPiGui.Web.BackgroundServices
             else if (_probeService.Chamber.Temperature > _probeService.Chamber.TargetTemperature + 1) {
                 heatingStatus = false;
                 _statusService.Heating = false;
+                #if !DEBUG
                 _gpioController.Write(heatPin, PinValue.Low);
+                #endif
                 _logger.LogInformation($"Not heating.");
                 Console.WriteLine($"Not heating.");
             }
@@ -59,7 +65,9 @@ namespace SmokerPiGui.Web.BackgroundServices
 
         public async override Task StopAsync(CancellationToken cancellationToken)  
         {
+            #if !DEBUG
             _gpioController.ClosePin(heatPin);
+            #endif
             await base.StopAsync(cancellationToken);
         }
     }

@@ -59,6 +59,11 @@ namespace SmokerPiGui.ViewModels
             _probeService.Chamber.TemperatureChanged += UpdateChamberTemperature;
             _probeService.Chamber.TargetTemperatureChanged += UpdateTargetTemperature;
 
+            _probeService.Probe1.TemperatureChanged += UpdateProbe1Temperature;
+            _probeService.Probe2.TemperatureChanged += UpdateProbe2Temperature;
+            _probeService.Probe3.TemperatureChanged += UpdateProbe3Temperature;
+            _probeService.Probe4.TemperatureChanged += UpdateProbe4Temperature;
+
             _statusService.HeatingStatusChanged += UpdateHeatingStatus;
 
             CookingText = "Cooking";
@@ -109,6 +114,23 @@ namespace SmokerPiGui.ViewModels
         private void UpdateChamberTemperature(object? sender, ProbeValueChangedArgs e)
         {
             ChamberTemp = _probeService.Chamber.Temperature;
+        }
+
+        private void UpdateProbe1Temperature(object? sender, ProbeValueChangedArgs e)
+        {
+            Probe1Readout = _probeService.Probe1.Temperature;
+        }
+        private void UpdateProbe2Temperature(object? sender, ProbeValueChangedArgs e)
+        {
+            Probe2Readout = _probeService.Probe2.Temperature;
+        }
+        private void UpdateProbe3Temperature(object? sender, ProbeValueChangedArgs e)
+        {
+            Probe3Readout = _probeService.Probe4.Temperature;
+        }
+        private void UpdateProbe4Temperature(object? sender, ProbeValueChangedArgs e)
+        {
+            Probe4Readout = _probeService.Probe4.Temperature;
         }
 
         private void UpdateHeatingStatus(object? sender, StatusServiceArgs e)

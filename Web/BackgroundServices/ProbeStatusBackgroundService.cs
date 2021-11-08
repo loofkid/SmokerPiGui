@@ -21,10 +21,12 @@ namespace SmokerPiGui.Web.BackgroundServices
         {
             _probeService = probeService;
             _logger = logger;
+            #if !DEBUG
             _gpioController = new (PinNumberingScheme.Board);
             _gpioController.OpenPin(chamberPin, PinMode.InputPullDown);
             _gpioController.OpenPin(probe1Pin, PinMode.InputPullDown);
             _gpioController.OpenPin(probe2Pin, PinMode.InputPullDown);
+            #endif
         }
 
         private void CheckProbes()
@@ -53,7 +55,9 @@ namespace SmokerPiGui.Web.BackgroundServices
         protected async override Task ExecuteAsync(CancellationToken cancellationToken)
         {
             while(!cancellationToken.IsCancellationRequested) {
+                #if !DEBUG
                 CheckProbes();
+                #endif
                 await Task.Delay(500, cancellationToken);
             }
         }
@@ -61,9 +65,11 @@ namespace SmokerPiGui.Web.BackgroundServices
 
         public async override Task StopAsync(CancellationToken cancellationToken)
         {
+            #if !DEBUG
             _gpioController.ClosePin(chamberPin);
             _gpioController.ClosePin(probe1Pin);
             _gpioController.ClosePin(probe2Pin);
+            #endif
             await base.StopAsync(cancellationToken);
         }
     }

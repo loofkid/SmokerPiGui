@@ -9,6 +9,7 @@ using Iot.Device.Ads1115;
 using System.Device.I2c;
 using UnitsNet;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using System.Security.Cryptography;
 
 namespace SmokerPiGui.Web.BackgroundServices 
 {
@@ -27,6 +28,7 @@ namespace SmokerPiGui.Web.BackgroundServices
         {
             _probeService = probeService;
             _logger = logger;
+#if !DEBUG
             _settings1 = new I2cConnectionSettings(1, 0x48);
             // _settings2 = new I2cConnectionSettings(1, 0x49);
             _device1 = I2cDevice.Create(_settings1);
@@ -34,10 +36,12 @@ namespace SmokerPiGui.Web.BackgroundServices
             var measuringRange = MeasuringRange.FS2048;
             adc1 = new (_device1, measuringRange: measuringRange, dataRate: DataRate.SPS860, deviceMode: DeviceMode.Continuous);
             // adc2 = new (_device2, measuringRange: measuringRange, dataRate: DataRate.SPS860, deviceMode: DeviceMode.Continuous);
+#endif
         }
 
         private void CheckTemps()
         {
+            #if !DEBUG
             ElectricPotential sourceVoltage = adc1.ReadVoltage(InputMultiplexer.AIN2);
             // if (_probeService.Chamber.Connected) 
                 ElectricPotential chamberProbe = adc1.ReadVoltage(InputMultiplexer.AIN0);
@@ -74,6 +78,15 @@ namespace SmokerPiGui.Web.BackgroundServices
             //     _logger.LogInformation($"Probe 2 Temperature is {_probeService.Probe2.Temperature}.");
             //     Console.WriteLine($"Probe 2 Temperature is {_probeService.Probe2.Temperature}");
             // }
+            #endif
+            #if DEBUG
+            var random = new Random();
+            _probeService.Chamber.Temperature = random.Next(74, 100);
+            _probeService.Probe1.Temperature = random.Next(74, 100);
+            _probeService.Probe2.Temperature = random.Next(74, 100);
+            _probeService.Probe3.Temperature = random.Next(74, 100);
+            _probeService.Probe4.Temperature = random.Next(74, 100);
+            #endif
         }
 
         private static double CalcTemp(ElectricPotential voltage, ElectricPotential sourceVoltage) 
